@@ -1,8 +1,13 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 
+
 const hosting = JSON.parse(readFileSync('.openai/hosting.json', 'utf8'));
-const origin = (process.env.SITE_URL || 'https://gula-logrono-antojos.originfps.chatgpt.site').replace(/\/$/, '');
-if (!/^https:\/\/[a-z0-9.-]+(?::\d+)?$/i.test(origin)) throw new Error('SITE_URL must be an HTTPS origin');
+const siteUrl = (process.env.SITE_URL || 'https://gula-logrono-antojos.originfps.chatgpt.site').replace(/\/$/, '');
+const parsedUrl = new URL(siteUrl);
+if (parsedUrl.protocol !== 'https:' || parsedUrl.search || parsedUrl.hash) {
+  throw new Error('SITE_URL must be an HTTPS site URL without a query or fragment');
+}
+const origin = siteUrl;
 const structuredData = {
   '@context': 'https://schema.org', '@type': 'FoodEstablishment',
   '@id': `${origin}/#gula`, name: 'GULA', url: `${origin}/`,
@@ -19,3 +24,4 @@ writeFileSync('dist/index.html', html);
 writeFileSync('dist/robots.txt', `User-agent: *\nAllow: /\nSitemap: ${origin}/sitemap.xml\n`);
 writeFileSync('dist/sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>${origin}/</loc></url></urlset>\n`);
 console.log(`SEO generated for ${origin} (${hosting.project_id})`);
+
