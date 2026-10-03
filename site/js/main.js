@@ -40,19 +40,6 @@ const updateSummary = () => {
 document.querySelectorAll('.builder input').forEach((input) => input.addEventListener('change', updateSummary));
 updateSummary();
 
-document.querySelector('#load-map')?.addEventListener('click', (event) => {
-  const slot = document.querySelector('#map-slot');
-  if (slot.querySelector('iframe')) return;
-  const frame = document.createElement('iframe');
-  frame.title = 'Mapa de GULA en calle Siervas de Jesús, Logroño';
-  frame.loading = 'lazy';
-  frame.referrerPolicy = 'no-referrer-when-downgrade';
-  frame.src = 'https://maps.google.com/maps?q=Calle%20Siervas%20de%20Jesus%202%2C%20Logrono&t=&z=16&ie=UTF8&iwloc=&output=embed';
-  slot.replaceChildren(frame);
-  event.currentTarget.innerHTML = 'Mapa cargado <span>✓</span>';
-  event.currentTarget.setAttribute('aria-expanded', 'true');
-});
-
 const consent = document.querySelector('#consent-banner');
 const externalChoice = localStorage.getItem('gula-external-consent');
 const loadInstagramPosts = () => {
